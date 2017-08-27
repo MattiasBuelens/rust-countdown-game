@@ -155,6 +155,9 @@ fn main() {
         println!("|- {}", &child);
         for grandchild in &child.explore() {
             println!("  |- {}", &grandchild);
+            for grandgrandchild in &grandchild.explore() {
+                println!("    |- {}", &grandgrandchild);
+            }
         }
     }
 }
