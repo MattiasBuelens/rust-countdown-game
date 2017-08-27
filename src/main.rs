@@ -111,8 +111,11 @@ impl Node {
             let right = stack.pop().unwrap();
             let left = stack.pop().unwrap();
 
-            // TODO Check overflow?
-            children.push(self.pop(Operator::Add, &stack, left + right));
+            // Break symmetry: add is commutative
+            if left <= right {
+                // TODO Check overflow?
+                children.push(self.pop(Operator::Add, &stack, left + right));
+            }
 
             // Disallow negative intermediate results
             // Positive solution can always be reached with only positive intermediates
@@ -120,8 +123,11 @@ impl Node {
                 children.push(self.pop(Operator::Subtract, &stack, left - right));
             }
 
-            // TODO Check overflow?
-            children.push(self.pop(Operator::Multiply, &stack, left * right));
+            // Break symmetry: multiply is commutative
+            if left <= right {
+                // TODO Check overflow?
+                children.push(self.pop(Operator::Multiply, &stack, left * right));
+            }
 
             // Disallow fractional temporary results
             // Integer solution can always be reached with only integer intermediates
