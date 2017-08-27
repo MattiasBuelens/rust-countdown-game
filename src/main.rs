@@ -66,6 +66,7 @@ impl fmt::Display for Node {
 
 impl Node {
     fn new(numbers: Vec<i32>) -> Node {
+        // TODO How to represent the root node?
         Node(Rc::new(NodeData {
             parent: Option::None,
             op: Operation::Push(0),
@@ -110,14 +111,20 @@ impl Node {
             let right = stack.pop().unwrap();
             let left = stack.pop().unwrap();
 
+            // TODO Check overflow?
             children.push(self.pop(Operator::Add, &stack, left + right));
 
+            // Disallow negative intermediate results
+            // Positive solution can always be reached with only positive intermediates
             if left - right >= 0 {
                 children.push(self.pop(Operator::Subtract, &stack, left - right));
             }
 
+            // TODO Check overflow?
             children.push(self.pop(Operator::Multiply, &stack, left * right));
 
+            // Disallow fractional temporary results
+            // Integer solution can always be reached with only integer intermediates
             if right != 0 && left % right == 0 {
                 children.push(self.pop(Operator::Divide, &stack, left / right));
             }
