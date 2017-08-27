@@ -1,0 +1,6 @@
+[package]
+name = "countdown"
+version = "0.1.0"
+authors = ["Mattias Buelens <mattias.buelens@gmail.com>"]
+
+[dependencies]
