@@ -1,6 +1,7 @@
 use std::rc::Rc;
 use std::fmt;
 use std::ops::Deref;
+use std::collections::VecDeque;
 
 #[derive(Debug, Clone)]
 enum Operator {
@@ -78,6 +79,15 @@ impl Node {
         }))
     }
 
+    fn has_value(&self) -> bool {
+        self.stack.len() == 1
+    }
+
+    fn value(&self) -> i32 {
+        assert!(self.has_value());
+        self.stack[0]
+    }
+
     fn push(&self, number_index: usize) -> Node {
         let mut numbers = self.numbers.clone();
         let number = numbers.remove(number_index);
@@ -150,17 +160,42 @@ impl Node {
 
 fn main() {
     let numbers = vec![50, 100, 9, 3, 8, 4];
-    // let target = 857;
+    let target = 857;
+
+    let solution = solve(numbers, target);
+
+    println!("Best: {}", &solution);
+    println!("Value: {}", solution.value());
+}
+
+fn solve(numbers: Vec<i32>, target: i32) -> Node {
     let root = Node::new(numbers);
 
-    println!("{}", &root);
-    for child in &root.explore() {
-        println!("|- {}", &child);
-        for grandchild in &child.explore() {
-            println!("  |- {}", &grandchild);
-            for grandgrandchild in &grandchild.explore() {
-                println!("    |- {}", &grandgrandchild);
+    let mut best_node = root.clone();
+    let mut best_value = -1;
+
+    // Breadth-first search
+    let mut queue = VecDeque::new();
+    queue.push_back(root);
+    while let Some(node) = queue.pop_front() {
+        if node.has_value() {
+            let value = node.value();
+            if best_value == -1 || (value - target).abs() < (best_value - target).abs() {
+                // First or better value
+                best_node = node.clone();
+                best_value = value;
+                if best_value == target {
+                    // Exact match
+                    break;
+                }
             }
         }
+
+        // Explore children
+        for child in node.explore() {
+            queue.push_back(child);
+        }
     }
+
+    best_node
 }
