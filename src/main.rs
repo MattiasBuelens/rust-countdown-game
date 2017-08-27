@@ -55,6 +55,15 @@ impl Deref for Node {
     }
 }
 
+impl fmt::Display for Node {
+    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        if let Some(ref parent) = self.parent {
+            write!(f, "{} ", parent)?;
+        }
+        write!(f, "{}", self.op)
+    }
+}
+
 impl Node {
     fn new(numbers: Vec<i32>) -> Node {
         Node(Rc::new(NodeData {
@@ -90,15 +99,6 @@ impl Node {
             stack: new_stack,
             numbers: self.numbers.clone()
         }))
-    }
-}
-
-impl fmt::Display for Node {
-    fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        if let Some(ref parent) = self.parent {
-            write!(f, "{} ", parent)?;
-        }
-        write!(f, "{}", self.op)
     }
 }
 
