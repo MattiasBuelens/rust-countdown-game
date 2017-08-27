@@ -100,47 +100,47 @@ impl Node {
             numbers: self.numbers.clone()
         }))
     }
-}
 
-fn explore_node(node: &Node) -> Vec<Node> {
-    let mut children = Vec::new();
+    fn explore(&self) -> Vec<Node> {
+        let mut children = Vec::new();
 
-    // Pop
-    if node.stack.len() >= 2 {
-        let mut stack = node.stack.clone();
-        let right = stack.pop().unwrap();
-        let left = stack.pop().unwrap();
+        // Pop
+        if self.stack.len() >= 2 {
+            let mut stack = self.stack.clone();
+            let right = stack.pop().unwrap();
+            let left = stack.pop().unwrap();
 
-        children.push(node.pop(Operator::Add, &stack, left + right));
+            children.push(self.pop(Operator::Add, &stack, left + right));
 
-        if left - right >= 0 {
-            children.push(node.pop(Operator::Subtract, &stack, left - right));
+            if left - right >= 0 {
+                children.push(self.pop(Operator::Subtract, &stack, left - right));
+            }
+
+            children.push(self.pop(Operator::Multiply, &stack, left * right));
+
+            if right != 0 && left % right == 0 {
+                children.push(self.pop(Operator::Divide, &stack, left / right));
+            }
         }
 
-        children.push(node.pop(Operator::Multiply, &stack, left * right));
-
-        if right != 0 && left % right == 0 {
-            children.push(node.pop(Operator::Divide, &stack, left / right));
+        // Push
+        for (i, _) in self.numbers.iter().enumerate() {
+            children.push(self.push(i));
         }
-    }
 
-    // Push
-    for (i, _) in node.numbers.iter().enumerate() {
-        children.push(node.push(i));
+        children
     }
-
-    children
 }
 
 fn main() {
     let numbers = vec![50, 100, 9, 3, 8, 4];
-//    let target = 857;
+    // let target = 857;
     let root = Node::new(numbers);
 
     println!("{}", &root);
-    for child in explore_node(&root) {
+    for child in &root.explore() {
         println!("|- {}", &child);
-        for grandchild in explore_node(&child) {
+        for grandchild in &child.explore() {
             println!("  |- {}", &grandchild);
         }
     }
