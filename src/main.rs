@@ -57,10 +57,13 @@ impl Deref for Node {
 
 impl fmt::Display for Node {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        if let Some(ref parent) = self.parent {
-            write!(f, "{} ", parent)?;
+        match self.parent {
+            Some(ref parent) => {
+                write!(f, "{} ", parent)?;
+                write!(f, "{}", self.op)
+            }
+            None => write!(f, "")
         }
-        write!(f, "{}", self.op)
     }
 }
 
