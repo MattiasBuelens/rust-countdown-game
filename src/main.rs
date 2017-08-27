@@ -163,12 +163,14 @@ fn main() {
     let numbers = vec![50, 100, 9, 3, 8, 4];
     let target = 857;
 
+    println!("Numbers: {:?}", numbers);
+    println!("Target: {}", target);
+
     let start = Instant::now();
     let solution = solve(numbers, target);
     let elapsed = start.elapsed();
 
-    println!("Best: {}", &solution);
-    println!("Value: {}", solution.value());
+    println!("Solution: {} = {}", &solution, solution.value());
     println!("Elapsed: {} ms", (elapsed.as_secs() * 1_000) + (elapsed.subsec_nanos() / 1_000_000) as u64);
 }
 
