@@ -2,6 +2,7 @@ use std::rc::Rc;
 use std::fmt;
 use std::ops::Deref;
 use std::collections::VecDeque;
+use std::time::Instant;
 
 #[derive(Debug, Clone)]
 enum Operator {
@@ -162,10 +163,13 @@ fn main() {
     let numbers = vec![50, 100, 9, 3, 8, 4];
     let target = 857;
 
+    let start = Instant::now();
     let solution = solve(numbers, target);
+    let elapsed = start.elapsed();
 
     println!("Best: {}", &solution);
     println!("Value: {}", solution.value());
+    println!("Elapsed: {} ms", (elapsed.as_secs() * 1_000) + (elapsed.subsec_nanos() / 1_000_000) as u64);
 }
 
 fn solve(numbers: Vec<i32>, target: i32) -> Node {
