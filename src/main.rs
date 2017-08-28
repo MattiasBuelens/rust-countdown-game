@@ -192,7 +192,7 @@ fn solve(numbers: Vec<i32>, target: i32, stats: &mut SolveStats) -> Node {
     let mut best_value = -1;
 
     // Breadth-first search
-    let mut queue = VecDeque::new();
+    let mut queue: VecDeque<Node> = VecDeque::new();
     queue.push_back(root);
     stats.expanded += 1;
 
