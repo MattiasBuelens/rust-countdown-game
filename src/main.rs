@@ -116,7 +116,7 @@ impl Node {
         }))
     }
 
-    fn explore(&self) -> Vec<Node> {
+    fn expand(&self) -> Vec<Node> {
         let mut children = Vec::new();
 
         // Pop
@@ -212,8 +212,8 @@ fn solve(numbers: Vec<i32>, target: i32, stats: &mut SolveStats) -> Node {
             }
         }
 
-        // Explore children
-        for child in node.explore() {
+        // Expand children
+        for child in node.expand() {
             queue.push_back(child);
             stats.expanded += 1;
         }
