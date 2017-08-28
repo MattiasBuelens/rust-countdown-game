@@ -12,6 +12,8 @@ enum Operator {
     Divide
 }
 
+const NUM_OPERATORS: usize = 4;
+
 impl fmt::Display for Operator {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         match self {
@@ -117,7 +119,7 @@ impl Node {
     }
 
     fn expand(&self) -> Vec<Node> {
-        let mut children = Vec::new();
+        let mut children: Vec<Node> = Vec::with_capacity(NUM_OPERATORS + self.numbers.len());
 
         // Pop
         if self.stack.len() >= 2 {
