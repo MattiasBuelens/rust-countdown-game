@@ -2,7 +2,6 @@ use std::rc::Rc;
 use std::fmt;
 use std::ops::Deref;
 use std::collections::VecDeque;
-use std::time::Instant;
 
 #[derive(Debug, Clone)]
 enum Operator {
@@ -41,7 +40,7 @@ impl fmt::Display for Operation {
 }
 
 #[derive(Debug)]
-struct NodeData {
+pub struct NodeData {
     parent: Option<Node>,
     op: Operation,
     stack: Vec<i32>,
@@ -49,7 +48,7 @@ struct NodeData {
 }
 
 #[derive(Clone, Debug)]
-struct Node(Rc<NodeData>);
+pub struct Node(Rc<NodeData>);
 
 impl Deref for Node {
     type Target = NodeData;
@@ -82,11 +81,11 @@ impl Node {
         }))
     }
 
-    fn has_value(&self) -> bool {
+    pub fn has_value(&self) -> bool {
         self.stack.len() == 1
     }
 
-    fn value(&self) -> i32 {
+    pub fn value(&self) -> i32 {
         assert!(self.has_value());
         self.stack[0]
     }
@@ -161,33 +160,18 @@ impl Node {
     }
 }
 
-fn main() {
-    let numbers = vec![50, 100, 9, 3, 8, 4];
-    let target = 857;
-    let mut stats = SolveStats::new();
-
-    println!("Numbers: {:?}", numbers);
-    println!("Target: {}", target);
-
-    let start = Instant::now();
-    let solution = solve(numbers, target, &mut stats);
-    let elapsed = start.elapsed();
-
-    println!("Solution: {} = {}", &solution, solution.value());
-    println!("Elapsed: {} ms", (elapsed.as_secs() * 1_000) + (elapsed.subsec_nanos() / 1_000_000) as u64);
-    println!("Stats: {} expanded, {} visited", stats.expanded, stats.visited);
-}
-
-struct SolveStats {
+pub struct SolveStats {
     expanded: usize,
     visited: usize
 }
 
 impl SolveStats {
-    fn new() -> SolveStats { SolveStats { expanded: 0, visited: 0 } }
+    pub fn new() -> SolveStats { SolveStats { expanded: 0, visited: 0 } }
+    pub fn expanded(&self) -> usize { self.expanded }
+    pub fn visited(&self) -> usize { self.visited }
 }
 
-fn solve(numbers: Vec<i32>, target: i32, stats: &mut SolveStats) -> Node {
+pub fn solve(numbers: Vec<i32>, target: i32, stats: &mut SolveStats) -> Node {
     let root = Node::new(numbers);
 
     let mut best_node = root.clone();
