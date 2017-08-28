@@ -162,19 +162,30 @@ impl Node {
 fn main() {
     let numbers = vec![50, 100, 9, 3, 8, 4];
     let target = 857;
+    let mut stats = SolveStats::new();
 
     println!("Numbers: {:?}", numbers);
     println!("Target: {}", target);
 
     let start = Instant::now();
-    let solution = solve(numbers, target);
+    let solution = solve(numbers, target, &mut stats);
     let elapsed = start.elapsed();
 
     println!("Solution: {} = {}", &solution, solution.value());
     println!("Elapsed: {} ms", (elapsed.as_secs() * 1_000) + (elapsed.subsec_nanos() / 1_000_000) as u64);
+    println!("Stats: {} expanded, {} visited", stats.expanded, stats.visited);
 }
 
-fn solve(numbers: Vec<i32>, target: i32) -> Node {
+struct SolveStats {
+    expanded: usize,
+    visited: usize
+}
+
+impl SolveStats {
+    fn new() -> SolveStats { SolveStats { expanded: 0, visited: 0 } }
+}
+
+fn solve(numbers: Vec<i32>, target: i32, stats: &mut SolveStats) -> Node {
     let root = Node::new(numbers);
 
     let mut best_node = root.clone();
@@ -183,7 +194,11 @@ fn solve(numbers: Vec<i32>, target: i32) -> Node {
     // Breadth-first search
     let mut queue = VecDeque::new();
     queue.push_back(root);
+    stats.expanded += 1;
+
     while let Some(node) = queue.pop_front() {
+        stats.visited += 1;
+
         if node.has_value() {
             let value = node.value();
             if best_value == -1 || (value - target).abs() < (best_value - target).abs() {
@@ -200,6 +215,7 @@ fn solve(numbers: Vec<i32>, target: i32) -> Node {
         // Explore children
         for child in node.explore() {
             queue.push_back(child);
+            stats.expanded += 1;
         }
     }
 
