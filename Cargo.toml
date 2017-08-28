@@ -1,5 +1,5 @@
 [package]
-name = "countdown"
+name = "countdown-game"
 version = "0.1.0"
 authors = ["Mattias Buelens <mattias.buelens@gmail.com>"]
 
